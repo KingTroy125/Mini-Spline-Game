@@ -9,27 +9,133 @@
         body {
             margin: 0;
             overflow: hidden;
+            background-color: #0a192f; /* Dark background */
         }
         spline-viewer {
             width: 100vw;
             height: 100vh;
+            display: none; /* Hide the viewer initially */
+        }
+        /* Play button styles */
+        #play-button {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 30px;
+            background-color: #ffcc80; /* Light orange color */
+            color: #0a192f; /* Darker text color */
+            border: none;
+            border-radius: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10000; /* Above loading screen */
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Add shadow */
+        }
+        #play-button:hover {
+            background-color: #ffb74d; /* Slightly darker on hover */
+            transform: scale(1.05); /* Slightly grow on hover */
+        }
+        /* Loading screen styles */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255, 204, 128, 0.9); /* Light orange background */
+            display: none; /* Hide loading screen initially */
+            justify-content: center;
+            align-items: center;
+            color: #0a192f; /* Darker text color */
+            font-size: 28px;
+            font-family: Arial, sans-serif;
+            z-index: 9999; /* Ensure it overlays other content */
+            animation: fadeIn 1s; /* Fade-in effect */
+        }
+        /* Spinner styles */
+        .spinner {
+            border: 8px solid #f3f3f3; /* Light color */
+            border-top: 8px solid #ffb74d; /* Accent color */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
         }
     </style>
 </head>
 <body>
+    <button id="play-button">Play</button>
+    
+    <div id="loading">
+        <div class="spinner"></div>
+        Loading...
+    </div>
+    
     <spline-viewer url="https://prod.spline.design/P-04XuYsKxYYAYbl/scene.splinecode"></spline-viewer>
 
     <script type="module">
-        // JavaScript code will go here
         const viewer = document.querySelector('spline-viewer');
+        const loadingScreen = document.getElementById('loading');
+        const playButton = document.getElementById('play-button');
 
-        // Add event listeners for interaction
-        viewer.addEventListener('click', () => {
-            console.log('Viewer clicked!');
-            // Add your game logic here
+        // Function to handle loading completion
+        function hideLoadingScreen() {
+            loadingScreen.style.display = 'none';
+            viewer.style.display = 'block'; // Show the viewer
+        }
+
+        // Function to start loading
+        function startLoading() {
+            playButton.style.display = 'none'; // Hide the play button
+            loadingScreen.style.display = 'flex'; // Show the loading screen
+            loadingScreen.classList.add('fade-in'); // Add fade-in class
+            // Simulate loading delay
+            setTimeout(hideLoadingScreen, 3000); // Adjust the delay as needed
+        }
+
+        // Event listener for the play button
+        playButton.addEventListener('click', startLoading);
+
+        // Add bounce animation to the play button
+        playButton.addEventListener('mouseenter', () => {
+            playButton.style.animation = 'bounce 0.5s';
+            setTimeout(() => {
+                playButton.style.animation = '';
+            }, 500);
         });
 
-        // Example of adding more interactions
+        // Function to handle interaction
+        function handleInteraction(event) {
+            event.preventDefault();
+            console.log('Viewer touched or clicked!');
+        }
+
+        // Add event listeners for click and touch events
+        viewer.addEventListener('click', handleInteraction);
+        viewer.addEventListener('touchstart', handleInteraction);
+
         function moveObject(objectId, x, y, z) {
             const object = viewer.getObjectById(objectId);
             if (object) {
