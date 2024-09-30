@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Game with Spline</title>
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.28/build/spline-viewer.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        spline-viewer {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <spline-viewer url="https://prod.spline.design/P-04XuYsKxYYAYbl/scene.splinecode"></spline-viewer>
+
+    <script type="module">
+        // JavaScript code will go here
+        const viewer = document.querySelector('spline-viewer');
+
+        // Add event listeners for interaction
+        viewer.addEventListener('click', () => {
+            console.log('Viewer clicked!');
+            // Add your game logic here
+        });
+
+        // Example of adding more interactions
+        function moveObject(objectId, x, y, z) {
+            const object = viewer.getObjectById(objectId);
+            if (object) {
+                object.position.set(x, y, z);
+            }
+        }
+
+        // Example usage of moveObject function
+        setTimeout(() => {
+            moveObject('objectIdHere', 1, 1, 1); // Replace 'objectIdHere' with your object's ID
+        }, 1000);
+    </script>
+</body>
+</html>
